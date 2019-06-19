@@ -1,5 +1,5 @@
 // types
-const { ApiPromise } = require('@polkadot/api');
+const { ApiPromise, WsProvider } = require('@polkadot/api');
 const util = require('util');
 const request = require("request");
 const requestPromise = util.promisify(request);
@@ -78,7 +78,7 @@ class DataObject extends Struct {
       liaison_judgement: LiaisonJudgement
     }, value);
   }
-} 
+}
 
 //class DataObjectStorageRelationship extends Struct {};
 class DataObjectStorageRelationship extends Struct {
@@ -353,7 +353,14 @@ getTypeRegistry().register({
 //console.log(telemetryHeight)
 
 async function main () {
-    const api = await ApiPromise.create();
+    // First argument to script should be the api endpoint, or localhost if not specified
+    const providerUrl = process.argv[2] || 'ws://127.0.0.1:9944';
+
+    // Initialise the provider
+    const provider = new WsProvider(providerUrl);
+
+    // Create the API and wait until ready
+    const api = await ApiPromise.create(provider);
     const hash = await api.rpc.chain.getFinalizedHead();
     var header = await api.derive.chain.getHeader(`${hash}`);
     console.log(`${header.blockNumber}`)
