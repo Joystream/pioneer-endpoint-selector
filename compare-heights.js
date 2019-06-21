@@ -1,29 +1,17 @@
-// types
-const { ApiPromise } = require('@polkadot/api');
-const util = require('util');
-const request = require("request");
-const requestPromise = util.promisify(request);
-
-//Import typeReg-istry
-const getTypeRegistry = require('@polkadot/types/codec/typeRegistry').default;
-
-const { Enum, EnumType, Struct, Option, Vector } = require ('@polkadot/types/codec');
-
-// const { getTypeRegistry, u32, u64, Bool, Text, BlockNumber, Moment, AccountId, Hash, Balance, Bytes } = require ('@polkadot/types');
-const { u32, u64, Bool, Text, BlockNumber, Moment, AccountId, Hash, Balance, Bytes } = require ('@polkadot/types');
-const { u8aToString } = require('@polkadot/util');
-
-
+const { ApiPromise, WsProvider } = require('@polkadot/api');
 const { registerJoystreamTypes } = require('@joystream/types');
 
 registerJoystreamTypes();
 
-//const telemetryHeight = process.argv[2];
-
-//console.log(telemetryHeight)
-
 async function main () {
-    const api = await ApiPromise.create();
+    // First argument to script should be the api endpoint, or localhost if not specified
+    const providerUrl = process.argv[2] || 'ws://127.0.0.1:9944';
+
+    // Initialise the provider
+    const provider = new WsProvider(providerUrl);
+
+    // Create the API and wait until ready
+    const api = await ApiPromise.create(provider);
     const hash = await api.rpc.chain.getFinalizedHead();
     var header = await api.derive.chain.getHeader(`${hash}`);
     console.log(`${header.blockNumber}`)
