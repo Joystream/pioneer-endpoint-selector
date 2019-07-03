@@ -2,6 +2,7 @@
 const scraper = require('./scrape.js')
 const models = require('./models.js')
 
+var lastHeight = 1137222
 
 const processModels = models => Promise.all(
   models.map(model => processLinks(model, model.urls))
@@ -10,7 +11,12 @@ const processModels = models => Promise.all(
       var stringHeight = (block[0][0].abv[0]);
       var height = stringHeight.match(/\d/g);
       var height = parseInt(height.join(""));
-      console.log(height);
+      if (height > lastHeight) {
+        console.log(height);
+      } else {
+        console.log(0);
+      }
+      
   }
 )
 
