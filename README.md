@@ -10,10 +10,10 @@ It will then use the API to get the `Finalized Block` from the localhost node, a
 
 If not, it will move down the list of possible hosted endpoints and replace the endpoint for the API, and check again until it finds a suitable endpoint. It will then replace the endpoint for `Pioneer`.
 
-Finally, the script reverts the API endpoint to localhost so that it will check this first.
+If telemetry is down, it will compare the possible endpoints, and select the "best" one, with a preference towards the order of the list.
 
 ## How to use
 1. Clone repo in the folder containing Pioneer, should be located in`~/webui`)
 2. Install required (additional) dependencies with `./get-dependencies`.
-3. Check `./endpoints.sh`, and ensure that the lists are in line with each other, ie. that `endpoints_api[0]` is localhost, and matches the `endpoints_pioneer[0]` wss. The remaining items in the list should be identical.
-3. Setup a service running `./endpoints.sh` at a reasonable time interval.
+3. Run `yarn`
+4. Setup a service running `./endpoints.sh` at a reasonable time interval.
